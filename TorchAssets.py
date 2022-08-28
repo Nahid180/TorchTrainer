@@ -4,7 +4,11 @@ from tqdm.auto import tqdm
 import os
 
 def train_mutilclass(model, dataset ,device, epochs,test_dataset=None ,Optimizer='SGD', learning_rate=0.01):
-  
+  import os
+  from tqdm.auto import tqdm
+  import torch
+  from torch import nn
+
   try:
     from torchmetrics import Accuracy
   except Exception as e:
@@ -14,9 +18,15 @@ def train_mutilclass(model, dataset ,device, epochs,test_dataset=None ,Optimizer
     else:
       print(e)
 
+  epoch_list=[]
+  train_loss_list=[]
+  train_accuracy_list=[]
+  test_loss_list=[]
+  test_accuracy_list=[]
+
   model=model.to(device)
   loss_fn=nn.CrossEntropyLoss()
-  activation=nn.Softmax()
+  activation=nn.Softmax(dim=1)
   accuracy_fn=Accuracy().to(device)
 
   if Optimizer=='adam':
@@ -48,6 +58,12 @@ def train_mutilclass(model, dataset ,device, epochs,test_dataset=None ,Optimizer
       optimizer.step()
     train_loss /= len(dataset)
     train_accuracy /= len(dataset)
+
+    with torch.inference_mode():
+      train_loss_list.append(float(train_loss))
+      train_accuracy_list.append(float(train_accuracy))
+      epoch_list.append(epoch)
+
     if test_dataset !=None:
       model.eval()
       test_loss=0
@@ -66,7 +82,16 @@ def train_mutilclass(model, dataset ,device, epochs,test_dataset=None ,Optimizer
           test_accuracy+=accuracy2
         test_loss /= len(test_dataset)
         test_accuracy /= len(test_dataset)
-      print(f'Epoch: {epoch} || Train Loss: {train_loss:.4f} || Train Accuracy: {train_accuracy*100:.4f} % || Test Loss: {test_loss} | Test Accuacy: {test_accuracy*100:.4f}')
+
+        test_loss_list.append(float(test_loss))
+        test_accuracy_list.append(float(test_accuracy))
+
+      print(f'Epoch: {epoch} || Train Loss: {train_loss:.4f} || Train Accuracy: {train_accuracy*100:.4f} % || Test Loss: {test_loss:.4f} | Test Accuacy: {test_accuracy*100:.4f}')
     else:
       print(f'Epoch: {epoch} || Loss: {train_loss:.4f} || Accuracy: {train_accuracy*100:.4f} %')
+  if test_dataset !=None:
+    return {"Epoch":epoch_list, "Train Loss": train_loss_list, "Train Accuracy": train_accuracy_list, "Test Loss":test_loss_list, "Test Accuracy": test_accuracy_list}
+  else:
+    return {"Epoch":epoch_list, "Train Loss": train_loss_list, "Train Accuracy": train_accuracy_list}
 
+      
