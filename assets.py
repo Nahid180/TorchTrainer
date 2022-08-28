@@ -48,6 +48,25 @@ def train_mutilclass(model, dataset ,device, epochs,test_dataset=None ,Optimizer
       optimizer.step()
     train_loss /= len(dataset)
     train_accuracy /= len(dataset)
+    if test_dataset !=None:
+      model.eval()
+      test_loss=0
+      test_accuracy=0
 
-  print(f'Epoch: {epoch} || Loss: {train_loss:.4f} || Accuracy: {train_accuracy*100:.4f} %')
+      with torch.inference_mode():
+        for x2 ,y2 in test_dataset:
+          x_test=x2.to(device)
+          y_test=y2.to(device)
+
+          test_logits=model(x_test)
+          test_preds=activation(test_logits).argmax(dim=1)
+          loss2=loss_fn(test_logits, y_test)
+          accuracy2=accuracy_fn(test_preds, y_test)
+          test_loss+=loss2
+          test_accuracy+=accuracy2
+        test_loss /= len(test_dataset)
+        test_accuracy /= len(test_dataset)
+      print(f'Epoch: {epoch} || Train Loss: {train_loss:.4f} || Train Accuracy: {train_accuracy*100:.4f} % || Test Loss: {test_loss} | Test Accuacy: {test_accuracy*100:.4f}')
+    else:
+      print(f'Epoch: {epoch} || Loss: {train_loss:.4f} || Accuracy: {train_accuracy*100:.4f} %')
 
