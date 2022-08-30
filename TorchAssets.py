@@ -3,7 +3,7 @@ from torch import nn
 from tqdm.auto import tqdm
 import os
 
-def train_mutilclass(model, dataset ,device, epochs,test_dataset=None ,Optimizer='SGD', learning_rate=0.01):
+def train_multiclass(model, dataset ,device, epochs,test_dataset=None ,Optimizer='SGD', learning_rate=0.01):
   import os
   from tqdm.auto import tqdm
   import torch
