@@ -86,7 +86,7 @@ def train_multiclass(model, dataset ,device, epochs,test_dataset=None ,Optimizer
         test_loss_list.append(float(test_loss))
         test_accuracy_list.append(float(test_accuracy))
 
-      print(f'Epoch: {epoch+1} || Train Loss: {train_loss:.4f} || Train Accuracy: {train_accuracy*100:.4f} % || Test Loss: {test_loss:.4f} | Test Accuacy: {test_accuracy*100:.4f}')
+      print(f'Epoch: {epoch+1} || Train Loss: {train_loss:.4f} || Train Accuracy: {train_accuracy*100:.4f} % || Test Loss: {test_loss:.4f} || Test Accuacy: {test_accuracy*100:.4f}')
     else:
       print(f'Epoch: {epoch+1} || Loss: {train_loss:.4f} || Accuracy: {train_accuracy*100:.4f} %')
   if test_dataset !=None:
