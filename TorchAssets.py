@@ -121,8 +121,8 @@ def train_multiclass(model, dataset ,device, epochs,test_dataset=None ,Optimizer
     else:
       print(f'\n\u001b[36mEpoch: {epoch+1} Results: Loss: {train_loss:.4f} || Accuracy: {train_accuracy*100:.4f} %')
   if test_dataset !=None:
-    return {"\nEpoch":epoch_list, "Train Loss": train_loss_list, "Train Accuracy": train_accuracy_list, "Test Loss":test_loss_list, "Test Accuracy": test_accuracy_list}
+    return {"Epoch":epoch_list, "Train Loss": train_loss_list, "Train Accuracy": train_accuracy_list, "Test Loss":test_loss_list, "Test Accuracy": test_accuracy_list}
   else:
-    return {"\nEpoch":epoch_list, "Train Loss": train_loss_list, "Train Accuracy": train_accuracy_list}
+    return {"Epoch":epoch_list, "Train Loss": train_loss_list, "Train Accuracy": train_accuracy_list}
 
       
