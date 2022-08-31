@@ -3,6 +3,34 @@ from torch import nn
 from tqdm.auto import tqdm
 import os
 
+#Progress Bar
+
+def progress(current, total,data, epoch,length=50):
+  #importing modules
+  try:
+    from colorama import Fore
+  except Exception as e:
+    if str(e)=="No module named 'colorama'":
+      os.system("pip install colorama")
+      from colorama import Fore
+    else:
+      print(e)
+  
+  import sys
+  #getting the percentage
+  percentage=int((current/total)*100)
+  #creating arrow --> (length/total)*current-->example-->(20/100)*10=2, (20/100)*50=10, (20/100)*100=20
+  line="-"*int((length/total)*current)+">"
+  #creating padding lenght - arrow count from above
+  padding=(length-int((length/total)*current))*" "
+  #definin the text color
+  color=Fore.GREEN if percentage==100 else Fore.BLUE
+  #printing the output
+  sys.stdout.write(f"\r{color}Epoch: {epoch+1} || Looked at {data} Samples [{line}{padding}] {percentage} %")
+  sys.stdout.flush()
+  
+#Main Training Function
+
 def train_multiclass(model, dataset ,device, epochs,test_dataset=None ,Optimizer='SGD', learning_rate=0.01):
   import os
   from tqdm.auto import tqdm
@@ -56,6 +84,9 @@ def train_multiclass(model, dataset ,device, epochs,test_dataset=None ,Optimizer
       optimizer.zero_grad()
       loss.backward()
       optimizer.step()
+
+      progress(batch+1, len(dataset), f"{(batch+1)*dataset.batch_size}/{len(dataset.dataset)}", epoch=epoch)
+      
     train_loss /= len(dataset)
     train_accuracy /= len(dataset)
 
@@ -86,12 +117,12 @@ def train_multiclass(model, dataset ,device, epochs,test_dataset=None ,Optimizer
         test_loss_list.append(float(test_loss))
         test_accuracy_list.append(float(test_accuracy))
 
-      print(f'Epoch: {epoch+1} || Train Loss: {train_loss:.4f} || Train Accuracy: {train_accuracy*100:.4f} % || Test Loss: {test_loss:.4f} || Test Accuacy: {test_accuracy*100:.4f}')
+      print(f'\n\u001b[36mEpoch: {epoch+1} Results: Train Loss: {train_loss:.4f} || Train Accuracy: {train_accuracy*100:.4f} % || Test Loss: {test_loss:.4f} || Test Accuacy: {test_accuracy*100:.4f}')
     else:
-      print(f'Epoch: {epoch+1} || Loss: {train_loss:.4f} || Accuracy: {train_accuracy*100:.4f} %')
+      print(f'\n\u001b[36mEpoch: {epoch+1} Results: Loss: {train_loss:.4f} || Accuracy: {train_accuracy*100:.4f} %')
   if test_dataset !=None:
-    return {"Epoch":epoch_list, "Train Loss": train_loss_list, "Train Accuracy": train_accuracy_list, "Test Loss":test_loss_list, "Test Accuracy": test_accuracy_list}
+    return {"\nEpoch":epoch_list, "Train Loss": train_loss_list, "Train Accuracy": train_accuracy_list, "Test Loss":test_loss_list, "Test Accuracy": test_accuracy_list}
   else:
-    return {"Epoch":epoch_list, "Train Loss": train_loss_list, "Train Accuracy": train_accuracy_list}
+    return {"\nEpoch":epoch_list, "Train Loss": train_loss_list, "Train Accuracy": train_accuracy_list}
 
       
