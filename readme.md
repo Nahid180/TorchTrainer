@@ -1,5 +1,5 @@
 ﻿# Torch Trainer
-Torch Trainer is a tool that will help you to train you PyTorch Model faster without having to write all the training steps one by one. It also come s with a colored progress bar for better visualization.
+Torch Trainer is a tool that will help you to train your PyTorch Model faster without having to write all the training steps one by one. It also come s with a colored progress bar for better visualization.
 
 
 
